@@ -15,7 +15,10 @@ class MoviesController < ApplicationController
     order = params[:order]
     @order = (order.nil? || order == 'desc') ? 'asc' : 'desc'
     
-    @movies = Movie.order("#{sort} #{order}")
+    @all_ratings = Movie.all_ratings
+    ratings = params[:ratings]
+    @ratings = ratings.nil? ? Movie.all_ratings : ratings.keys
+    @movies = Movie.order("#{sort} #{order}").where('rating IN (?)', @ratings).all
   end
   
   def new
